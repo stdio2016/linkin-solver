@@ -12,7 +12,7 @@ export default function Home() {
           <div className="w-full">
             <Link href="/queens" className="flex border-1 rounded-md justify-between">
               <div className="p-3 flex items-center">Queens</div>
-              <div className="p-3 bg-yellow-200 flex items-center rounded-r-md">
+              <div className="p-3 bg-purple-400 flex items-center rounded-r-md">
                 <Image src="vercel.svg" alt="" width={50} height={50}/>
               </div>
             </Link>

@@ -24,3 +24,28 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.queens-color1 {
+  background-color: #bea4dc;
+}
+.queens-color2 {
+  background-color: #ffcc85;
+}
+.queens-color3 {
+  background-color: #9ec0ff;
+}
+.queens-color4 {
+  background-color: #b7e49d;
+}
+.queens-color5 {
+  background-color: #e0e0e0;
+}
+.queens-color6 {
+  background-color: #ff785e;
+}
+.queens-color7 {
+  background-color: #ecf58a;
+}
+.queens-color8 {
+  background-color: #b6b6a3;
+}
