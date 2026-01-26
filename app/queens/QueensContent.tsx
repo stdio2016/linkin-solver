@@ -58,7 +58,7 @@ export default function QueensContent() {
 
   if (editing) {
     return (
-      <main className="flex min-h-screen w-full max-w-[430px] flex-col items-center justify-between py-12 px-8 bg-white gap-2 dark:bg-black">
+      <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center justify-between py-12 px-8 bg-white gap-2 dark:bg-black">
         <p className="text-xl">Edit board</p>
         <QueensBoard
           n={n}
@@ -85,7 +85,7 @@ export default function QueensContent() {
     );
   }
   return (
-    <main className="flex min-h-screen w-full max-w-[430px] flex-col items-center py-12 px-8 bg-white gap-3 dark:bg-black">
+    <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center py-12 px-8 bg-white gap-3 dark:bg-black">
       <span className="text-xl">Solve</span>
       <QueensBoard
         n={n}
