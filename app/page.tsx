@@ -11,17 +11,17 @@ export default function Home() {
           </h1>
           <div className="w-full">
             <Link href="/queens" className="flex border-1 rounded-md justify-between">
-              <div className="p-3 flex items-center">Queens</div>
+              <div className="p-3 flex items-center">Queens (In develop)</div>
               <div className="p-3 bg-purple-400 flex items-center rounded-r-md">
-                <Image src="vercel.svg" alt="" width={50} height={50}/>
+                <Image src="queens.svg" alt="" width={50} height={50}/>
               </div>
             </Link>
           </div>
           <div className="w-full">
             <Link href="" className="flex border-1 rounded-md justify-between">
               <div className="p-3 flex items-center">Tango (Coming Soon)</div>
-              <div className="p-3 bg-gray-200 flex items-center rounded-r-md">
-                <Image src="globe.svg" alt="" width={50} height={50}/>
+              <div className="p-3 bg-gray-300 flex items-center rounded-r-md">
+                <Image src="tango.svg" alt="" width={50} height={50}/>
               </div>
             </Link>
           </div>
