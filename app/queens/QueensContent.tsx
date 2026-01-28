@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import QueensBoard from "./QueensBoard";
+import { QueensSolutionView } from "./QueensSolutionView";
 
 export default function QueensContent() {
   const [n, setN] = useState(7);
@@ -58,7 +59,7 @@ export default function QueensContent() {
 
   if (editing) {
     return (
-      <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center justify-between py-12 px-8 bg-white gap-2 dark:bg-black">
+      <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center pt-12 px-8 bg-white gap-2 dark:bg-black">
         <p className="text-xl">Edit board</p>
         <QueensBoard
           n={n}
@@ -85,26 +86,10 @@ export default function QueensContent() {
     );
   }
   return (
-    <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center py-12 px-8 bg-white gap-3 dark:bg-black">
-      <span className="text-xl">Solve</span>
-      <QueensBoard
-        n={n}
-        colors={colors}
-        onDraw={() => {}}/>
-      <div className="flex w-full justify-stretch gap-5">
-        <button
-          className="border-1 border-black-400 active:bg-gray-200 flex-1 p-1 rounded-lg"
-          onClick={()=>{}}>◀️ Prev step</button>
-        <button
-          className="text-white bg-blue-500 active:bg-blue-600 flex-1 p-1 rounded-lg"
-          onClick={()=>{}}>Next step ▶️</button>
-      </div>
-      <div className="w-full bg-gray-200 h-[6rem] p-1">
-        This will show logic steps
-      </div>
-      <button
-        className="text-white bg-red-600 active:bg-red-700 p-1 pl-2 pr-2 rounded-md"
-        onClick={() => setEditing(true)}>✏️ Edit</button>
-    </main>
+    <QueensSolutionView
+      n={n}
+      colors={colors}
+      onEdit={() => setEditing(true)}
+    />
   );
 };
