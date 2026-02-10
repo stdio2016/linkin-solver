@@ -5,22 +5,22 @@ interface QueensBoardProps {
 }
 
 export default function QueensBoard({n, colors, onDraw}: QueensBoardProps) {
-  var out = [];
+  const out = [];
   for (let i = 0; i < n * n; i++) {
-    var colorClass = `queens-color` + colors[i];
-    var borderLeft = '';
+    const colorClass = `queens-color` + colors[i];
+    let borderLeft = '';
     if (i%n > 0 && colors[i] !== colors[i-1]) {
       borderLeft = '1px solid black';
     }
-    var borderRight = '';
+    let borderRight = '';
     if (i%n < n-1 && colors[i] !== colors[i+1]) {
       borderRight = '1px solid black';
     }
-    var borderTop = '';
+    let borderTop = '';
     if (i >= n && colors[i] !== colors[i-n]) {
       borderTop = '1px solid black';
     }
-    var borderBottom = '';
+    let borderBottom = '';
     if (i < (n-1)*n && colors[i] !== colors[i+n]) {
       borderBottom = '1px solid black';
     }
@@ -32,7 +32,7 @@ export default function QueensBoard({n, colors, onDraw}: QueensBoardProps) {
         onPointerDown={e => {
           e.preventDefault();
           e.currentTarget.releasePointerCapture(e.pointerId);
-          onDraw && onDraw(i);
+          onDraw?.(i);
         }}
       >
         <div style={{borderLeft, borderRight, borderTop, borderBottom}}

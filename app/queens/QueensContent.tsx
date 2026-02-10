@@ -12,8 +12,8 @@ export default function QueensContent() {
 
   const colorElts = [];
   for (let i = 1; i <= n; i++) {
-    var colorClass = ' queens-color' + i;
-    var pickBorder = ' border-1';
+    const colorClass = ' queens-color' + i;
+    let pickBorder = ' border-1';
     if (pickColor === i) {
       pickBorder = ' border-3 border-red-500';
     }
@@ -25,16 +25,16 @@ export default function QueensContent() {
   }
 
   function drawColor(idx: number) {
-    var newC = colors.slice();
+    const newC = colors.slice();
     newC[idx] = pickColor;
     setColors(newC);
   }
 
   function decreaseSize() {
     if (n <= 5) return;
-    var newC = [];
-    for (var i = 0; i < n-1; i++) {
-      for (var j = 0; j < n-1; j++) {
+    const newC = [];
+    for (let i = 0; i < n-1; i++) {
+      for (let j = 0; j < n-1; j++) {
         newC.push(Math.min(colors[i*n+j], n-1));
       }
     }
@@ -47,9 +47,9 @@ export default function QueensContent() {
 
   function increaseSize() {
     if (n >= 11) return;
-    var newC = Array((n+1)**2).fill(1);
-    for (var i = 0; i < n; i++) {
-      for (var j = 0; j < n; j++) {
+    const newC = Array((n+1)**2).fill(1);
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
         newC[i*(n+1)+j] = colors[i*n+j];
       }
     }

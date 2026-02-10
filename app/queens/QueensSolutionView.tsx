@@ -9,6 +9,7 @@ interface QueensSolutionViewProps {
 
 export function QueensSolutionView({n, colors, onEdit}: QueensSolutionViewProps) {
   const solution = useMemo(() => {
+    console.log('TODO', colors);
     return [{
       answer: Array(n*n).fill(0),
       highlight: [],
