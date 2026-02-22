@@ -34,6 +34,7 @@ export class QueensSolver {
   private n: number;
   private colors: number[];
   private currentAnswer: Answer[];
+  private noSolution: boolean = false;
   public steps: DeductionStep[] = [];
 
   /**
@@ -58,6 +59,22 @@ export class QueensSolver {
     while (hasProgress) {
       hasProgress = this.trySolveStep();
     }
+    if (this.currentAnswer.filter(x => x === Answer.QUEEN).length === this.n) {
+      this.pushLastStep("Solved 🎉", []);
+    } else if (this.noSolution) {
+      // The reason that there is no solution should have been pushed to steps already
+    } else {
+      this.pushLastStep("I am not smart enough to solve this puzzle 😭", []);
+    }
+  }
+
+  private pushLastStep(description: string, params: string[]) {
+    this.steps.push({
+      answer: [...this.currentAnswer],
+      highlight: [],
+      description: description,
+      params: params
+    });
   }
 
   public trySolveStep(): boolean {
@@ -134,6 +151,16 @@ export class QueensSolver {
         });
         return true;
       }
+      if (!hasQueen && emptyCells.length === 0) {
+        this.noSolution = true;
+        this.steps.push({
+          answer: [...this.currentAnswer],
+          highlight: [],
+          description: "Row {0} has no possible cell for a queen. No solution 🚫",
+          params: [(r + 1).toString()]
+        });
+        return false;
+      }
     }
 
     // Columns
@@ -154,6 +181,16 @@ export class QueensSolver {
           params: [(c + 1).toString()]
         });
         return true;
+      }
+      if (!hasQueen && emptyCells.length === 0) {
+        this.noSolution = true;
+        this.steps.push({
+          answer: [...this.currentAnswer],
+          highlight: [],
+          description: "Column {0} has no possible cell for a queen. No solution 🚫",
+          params: [(c + 1).toString()]
+        });
+        return false;
       }
     }
 
@@ -176,6 +213,16 @@ export class QueensSolver {
           params: [ColorNames[color]]
         });
         return true;
+      }
+      if (!data.hasQueen && data.empty.length === 0) {
+        this.noSolution = true;
+        this.steps.push({
+          answer: [...this.currentAnswer],
+          highlight: [],
+          description: "Color area {0} has no possible cell for a queen. No solution 🚫",
+          params: [ColorNames[color]]
+        });
+        return false;
       }
     }
 
