@@ -10,9 +10,6 @@ interface QueensBoardProps {
 
 export default function QueensBoard({ n, colors, onDraw, answer, highlight }: QueensBoardProps) {
   const out = [];
-  if (highlight) {
-    console.log('Sorry to tell you but highlight is not implemented yet' + highlight);
-  }
   for (let i = 0; i < n * n; i++) {
     const colorClass = `queens-color` + colors[i];
     let borderLeft = '';
@@ -30,6 +27,13 @@ export default function QueensBoard({ n, colors, onDraw, answer, highlight }: Qu
     let borderBottom = '';
     if (i < (n - 1) * n && colors[i] !== colors[i + n]) {
       borderBottom = '1px solid black';
+    }
+    if (highlight?.includes(i)) {
+      const highlightBorder = '2px solid red';
+      borderBottom = highlightBorder;
+      borderLeft = highlightBorder;
+      borderRight = highlightBorder;
+      borderTop = highlightBorder;
     }
     out.push(<div
       key={'cell' + i}
