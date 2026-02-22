@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import QueensBoard from "./QueensBoard";
+import { QueensSolver } from "./QueensSolver";
 
 interface QueensSolutionViewProps {
   n: number;
@@ -7,26 +8,26 @@ interface QueensSolutionViewProps {
   onEdit?: () => void;
 }
 
-export function QueensSolutionView({n, colors, onEdit}: QueensSolutionViewProps) {
+function formatDescription(description: string, params: string[]): string {
+  for (let i = 0; i < params.length; i++) {
+    description = description.replace('{' + i + '}', params[i]);
+  }
+  return description;
+}
+
+export function QueensSolutionView({ n, colors, onEdit }: QueensSolutionViewProps) {
   const solution = useMemo(() => {
-    console.log('TODO', colors);
+    const solver = new QueensSolver(n, colors);
+    solver.solve();
+    if (solver.steps) {
+      return solver.steps;
+    }
     return [{
-      answer: Array(n*n).fill(0),
+      answer: [],
       highlight: [],
-      description: 'This will show logic steps',
-    }, {
-      answer: Array(n*n).fill(0),
-      highlight: [],
-      description: 'step 1',
-    }, {
-      answer: Array(n*n).fill(0),
-      highlight: [],
-      description: 'step 2',
-    }, {
-      answer: Array(n*n).fill(0),
-      highlight: [],
-      description: 'step 3',
-    }];
+      description: "I am not smart enough to solve this puzzle",
+      params: []
+    }]
   }, [n, colors]);
   const [step, setStep] = useState(0);
 
@@ -36,17 +37,19 @@ export function QueensSolutionView({n, colors, onEdit}: QueensSolutionViewProps)
       <QueensBoard
         n={n}
         colors={colors}
-        onDraw={() => {}}/>
+        answer={solution[step].answer}
+        highlight={solution[step].highlight}
+        onDraw={() => { }} />
       <div className="flex w-full justify-stretch gap-5">
         <button
           className="border-1 border-black-400 active:bg-gray-200 flex-1 p-1 rounded-lg"
-          onClick={() => setStep(Math.max(0, step-1))}>◀️ Prev step</button>
+          onClick={() => setStep(Math.max(0, step - 1))}>◀️ Prev step</button>
         <button
           className="text-white bg-blue-500 active:bg-blue-600 flex-1 p-1 rounded-lg"
-          onClick={() => setStep(Math.min(step+1, solution.length-1))}>Next step ▶️</button>
+          onClick={() => setStep(Math.min(step + 1, solution.length - 1))}>Next step ▶️</button>
       </div>
       <div className="w-full bg-gray-200 h-[6rem] p-1">
-        {solution[step].description}
+        {formatDescription(solution[step].description, solution[step].params)}
       </div>
       <button
         className="text-white bg-red-600 active:bg-red-700 p-1 pl-2 pr-2 rounded-md"
