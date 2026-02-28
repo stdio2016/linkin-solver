@@ -343,6 +343,91 @@ export class QueensSolver {
       }
     }
 
+    const step5 = this.trySolveExcludeNeighbors();
+    if (step5 !== null) return step5;
+
     return false;
+  }
+
+  public trySolveExcludeNeighbors(): boolean | null {
+    const colorHasQueen = Array(this.n + 1).fill(false);
+    const colorMapRow: number[][] = [];
+    const colorMapCol: number[][] = [];
+    for (let i = 0; i <= this.n; i++) {
+      colorMapRow.push([]);
+      colorMapCol.push([]);
+    }
+    for (let i = 0; i < this.n * this.n; i++) {
+      const color = this.colors[i];
+      if (this.currentAnswer[i] === Answer.QUEEN) {
+        colorHasQueen[color] = true;
+      } else if (this.currentAnswer[i] === Answer.EMPTY) {
+        colorMapRow[color].push(Math.floor(i / this.n));
+        colorMapCol[color].push(i % this.n);
+      }
+    }
+    for (let i = 1; i <= this.n; i++) {
+      if (colorHasQueen[i]) {
+        continue;
+      }
+      const cellsRow = colorMapRow[i];
+      const cellsCol = colorMapCol[i];
+      if (cellsRow.length === 0 || cellsCol.length === 0) {
+        this.noSolution = true;
+        this.pushLastStep("Color area {0} has no possible cell for a queen. No solution 🚫", [ColorNames[i]]);
+        return false;
+      }
+      let conflictCells = new Set<number>();
+      // intersection of all conflict cells
+      for (let j = 0; j < cellsRow.length; j++) {
+        const currentConflictCells = new Set<number>();
+        // same column
+        for (let r = 0; r < this.n; r++) {
+          const idx = r * this.n + cellsCol[j];
+          if (this.colors[idx] !== i && this.currentAnswer[idx] === Answer.EMPTY) {
+            currentConflictCells.add(idx);
+          }
+        }
+        // same row
+        for (let c = 0; c < this.n; c++) {
+          const idx = cellsRow[j] * this.n + c;
+          if (this.colors[idx] !== i && this.currentAnswer[idx] === Answer.EMPTY) {
+            currentConflictCells.add(idx);
+          }
+        }
+        // neighbors
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const nr = cellsRow[j] + dr;
+            const nc = cellsCol[j] + dc;
+            if (nr >= 0 && nr < this.n && nc >= 0 && nc < this.n) {
+              const nIdx = nr * this.n + nc;
+              if (this.colors[nIdx] !== i && this.currentAnswer[nIdx] === Answer.EMPTY) {
+                currentConflictCells.add(nIdx);
+              }
+            }
+          }
+        }
+        if (j === 0) {
+          conflictCells = currentConflictCells;
+        } else {
+          conflictCells = conflictCells.intersection(currentConflictCells);
+        }
+      }
+      // check if we can actually mark X because maybe we have marked before
+      const cellsToX = Array.from(conflictCells).filter(idx => this.currentAnswer[idx] === Answer.EMPTY);
+      if (cellsToX.length > 0) {
+        cellsToX.forEach(idx => this.currentAnswer[idx] = Answer.X);
+        this.steps.push({
+          answer: [...this.currentAnswer],
+          highlight: cellsToX,
+          description: "All highlighted cells are in conflict with every cell in color {0}, so they are marked as X",
+          params: [ColorNames[i]]
+        });
+        return true;
+      }
+    }
+    return null;
   }
 }
