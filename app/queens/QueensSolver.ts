@@ -55,7 +55,7 @@ export class QueensSolver {
    * Two queens must not touch each other, not even diagonally.
    */
   public solve() {
-    var hasProgress = true;
+    let hasProgress = true;
     while (hasProgress) {
       hasProgress = this.trySolveStep();
     }
@@ -134,7 +134,7 @@ export class QueensSolver {
     // 2. If a row/column/color has only one EMPTY cell and no QUEEN, place a QUEEN
     // Rows
     for (let r = 0; r < this.n; r++) {
-      let emptyCells = [];
+      const emptyCells = [];
       let hasQueen = false;
       for (let c = 0; c < this.n; c++) {
         const idx = r * this.n + c;
@@ -165,7 +165,7 @@ export class QueensSolver {
 
     // Columns
     for (let c = 0; c < this.n; c++) {
-      let emptyCells = [];
+      const emptyCells = [];
       let hasQueen = false;
       for (let r = 0; r < this.n; r++) {
         const idx = r * this.n + c;
@@ -279,7 +279,7 @@ export class QueensSolver {
     // 4. Region Exclusion: If all possible spots for a row/column are in one color, exclusion for other cells of that color
     // Rows
     for (let r = 0; r < this.n; r++) {
-      let emptyCells = [];
+      const emptyCells = [];
       let hasQueen = false;
       for (let c = 0; c < this.n; c++) {
         const idx = r * this.n + c;
@@ -312,7 +312,7 @@ export class QueensSolver {
 
     // Columns
     for (let c = 0; c < this.n; c++) {
-      let emptyCells = [];
+      const emptyCells = [];
       let hasQueen = false;
       for (let r = 0; r < this.n; r++) {
         const idx = r * this.n + c;
@@ -349,7 +349,7 @@ export class QueensSolver {
     return false;
   }
 
-  public trySolveExcludeNeighbors(): boolean | null {
+  private trySolveExcludeNeighbors(): boolean | null {
     const colorHasQueen = Array(this.n + 1).fill(false);
     const colorMapRow: number[][] = [];
     const colorMapCol: number[][] = [];
