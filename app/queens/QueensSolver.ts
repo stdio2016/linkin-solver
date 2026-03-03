@@ -1,5 +1,3 @@
-import { ColorNames } from "./colorNames";
-
 export enum Answer {
   EMPTY = 0,
   X = 1, // mark impossible places
@@ -27,8 +25,10 @@ export interface DeductionStep {
   /**
    * For string replacement of description format string
    */
-  params: string[];
+  params: Param[];
 }
+
+export type Param = number | number[] | string;
 
 export class QueensSolver {
   private n: number;
@@ -68,7 +68,7 @@ export class QueensSolver {
     }
   }
 
-  private pushLastStep(description: string, params: string[]) {
+  private pushLastStep(description: string, params: Param[]) {
     this.steps.push({
       answer: [...this.currentAnswer],
       highlight: [],
@@ -124,7 +124,7 @@ export class QueensSolver {
             answer: [...this.currentAnswer],
             highlight: [i],
             description: "Queen at row {0} column {1} excludes other possible cells",
-            params: [(row + 1).toString(), (col + 1).toString()]
+            params: [row + 1, col + 1]
           });
           return true;
         }
@@ -147,7 +147,7 @@ export class QueensSolver {
           answer: [...this.currentAnswer],
           highlight: [emptyCells[0]],
           description: "Row {0} has only one possible cell for a queen",
-          params: [(r + 1).toString()]
+          params: [r + 1]
         });
         return true;
       }
@@ -157,7 +157,7 @@ export class QueensSolver {
           answer: [...this.currentAnswer],
           highlight: [],
           description: "Row {0} has no possible cell for a queen. No solution 🚫",
-          params: [(r + 1).toString()]
+          params: [r + 1]
         });
         return false;
       }
@@ -178,7 +178,7 @@ export class QueensSolver {
           answer: [...this.currentAnswer],
           highlight: [emptyCells[0]],
           description: "Column {0} has only one possible cell for a queen",
-          params: [(c + 1).toString()]
+          params: [c + 1]
         });
         return true;
       }
@@ -188,7 +188,7 @@ export class QueensSolver {
           answer: [...this.currentAnswer],
           highlight: [],
           description: "Column {0} has no possible cell for a queen. No solution 🚫",
-          params: [(c + 1).toString()]
+          params: [c + 1]
         });
         return false;
       }
@@ -209,8 +209,8 @@ export class QueensSolver {
         this.steps.push({
           answer: [...this.currentAnswer],
           highlight: [data.empty[0]],
-          description: "Color area {0} has only one possible cell for a queen",
-          params: [ColorNames[color]]
+          description: "Color area {c0} has only one possible cell for a queen",
+          params: [color]
         });
         return true;
       }
@@ -219,8 +219,8 @@ export class QueensSolver {
         this.steps.push({
           answer: [...this.currentAnswer],
           highlight: [],
-          description: "Color area {0} has no possible cell for a queen. No solution 🚫",
-          params: [ColorNames[color]]
+          description: "Color area {c0} has no possible cell for a queen. No solution 🚫",
+          params: [color]
         });
         return false;
       }
@@ -247,8 +247,8 @@ export class QueensSolver {
           this.steps.push({
             answer: [...this.currentAnswer],
             highlight: data.empty,
-            description: "All possible cells for color {0} are in row {1}, so other cells in this row cannot have a queen",
-            params: [ColorNames[color], (r + 1).toString()]
+            description: "All possible cells for color {c0} are in row {1}, so other cells in this row cannot have a queen",
+            params: [color, r + 1]
           });
           return true;
         }
@@ -268,8 +268,8 @@ export class QueensSolver {
           this.steps.push({
             answer: [...this.currentAnswer],
             highlight: data.empty,
-            description: "All possible cells for color {0} are in column {1}, so other cells in this column cannot have a queen",
-            params: [ColorNames[color], (c + 1).toString()]
+            description: "All possible cells for color {c0} are in column {1}, so other cells in this column cannot have a queen",
+            params: [color, c + 1]
           });
           return true;
         }
@@ -301,8 +301,8 @@ export class QueensSolver {
             this.steps.push({
               answer: [...this.currentAnswer],
               highlight: emptyCells,
-              description: "All possible cells for row {0} are in color area {1}, so other cells in this color area cannot have a queen",
-              params: [(r + 1).toString(), ColorNames[color]]
+              description: "All possible cells for row {0} are in color area {c1}, so other cells in this color area cannot have a queen",
+              params: [r + 1, color]
             });
             return true;
           }
@@ -334,8 +334,8 @@ export class QueensSolver {
             this.steps.push({
               answer: [...this.currentAnswer],
               highlight: emptyCells,
-              description: "All possible cells for column {0} are in color area {1}, so other cells in this color area cannot have a queen",
-              params: [(c + 1).toString(), ColorNames[color]]
+              description: "All possible cells for column {0} are in color area {c1}, so other cells in this color area cannot have a queen",
+              params: [c + 1, color]
             });
             return true;
           }
@@ -374,7 +374,7 @@ export class QueensSolver {
       const cellsCol = colorMapCol[i];
       if (cellsRow.length === 0 || cellsCol.length === 0) {
         this.noSolution = true;
-        this.pushLastStep("Color area {0} has no possible cell for a queen. No solution 🚫", [ColorNames[i]]);
+        this.pushLastStep("Color area {c0} has no possible cell for a queen. No solution 🚫", [i]);
         return false;
       }
       let conflictCells = new Set<number>();
@@ -422,8 +422,8 @@ export class QueensSolver {
         this.steps.push({
           answer: [...this.currentAnswer],
           highlight: cellsToX,
-          description: "All highlighted cells are in conflict with every cell in color {0}, so they are marked as X",
-          params: [ColorNames[i]]
+          description: "Highlighted cells are in conflict with every cell in color {c0}, so they are marked as X",
+          params: [i]
         });
         return true;
       }

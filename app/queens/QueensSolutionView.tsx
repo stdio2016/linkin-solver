@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import QueensBoard from "./QueensBoard";
-import { QueensSolver } from "./QueensSolver";
+import { QueensSolver, Param } from "./QueensSolver";
+import { ColorNames } from "./colorNames";
 
 interface QueensSolutionViewProps {
   n: number;
@@ -8,10 +9,22 @@ interface QueensSolutionViewProps {
   onEdit?: () => void;
 }
 
-function formatDescription(description: string, params: string[]): string {
-  for (let i = 0; i < params.length; i++) {
-    description = description.replace('{' + i + '}', params[i]);
-  }
+function formatDescription(description: string, params: Param[]): string {
+  description = description.replace(/\{(c?)(\d)\}/g, function (match, typeCode, p1) {
+    const idx = parseInt(p1);
+    const val = params[idx];
+    if (typeCode === 'c') {
+      if (Array.isArray(val)) {
+        return val.map(v => ColorNames[v]).join(', ');
+      }
+      if (typeof val === 'string') {
+        return val;
+      }
+      return ColorNames[val];
+    }
+    const strVal = Array.isArray(val) ? val.join(', ') : val.toString();
+    return strVal;
+  });
   return description;
 }
 
