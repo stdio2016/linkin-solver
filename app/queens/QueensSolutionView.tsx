@@ -44,6 +44,11 @@ export function QueensSolutionView({ n, colors, onEdit }: QueensSolutionViewProp
   }, [n, colors]);
   const [step, setStep] = useState(0);
 
+  if (step >= solution.length) {
+    // just to be safe
+    setStep(solution.length - 1);
+  }
+
   return (
     <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center pt-12 px-8 bg-white gap-2 dark:bg-black">
       <p className="text-xl">Solve</p>
@@ -53,15 +58,16 @@ export function QueensSolutionView({ n, colors, onEdit }: QueensSolutionViewProp
         answer={solution[step].answer}
         highlight={solution[step].highlight}
         onDraw={() => { }} />
-      <div className="flex w-full justify-stretch gap-5">
+      <div className="flex w-full justify-stretch gap-5 items-center">
         <button
           disabled={step === 0}
           className="border-1 border-black-400 active:bg-gray-200 flex-1 p-1 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
-          onClick={() => setStep(Math.max(0, step - 1))}>◀️ Prev step</button>
+          onClick={() => setStep(Math.max(0, step - 1))}>◀️ Prev</button>
+        <span className="flex-1 text-center">{step + 1}/{solution.length}</span>
         <button
           disabled={step === solution.length - 1}
           className="text-white bg-blue-500 active:bg-blue-600 flex-1 p-1 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
-          onClick={() => setStep(Math.min(step + 1, solution.length - 1))}>Next step ▶️</button>
+          onClick={() => setStep(Math.min(step + 1, solution.length - 1))}>Next ▶️</button>
       </div>
       <div className="w-full bg-gray-200 h-[6rem] p-1">
         {formatDescription(solution[step].description, solution[step].params)}

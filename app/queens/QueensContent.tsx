@@ -6,7 +6,7 @@ import { QueensSolutionView } from "./QueensSolutionView";
 
 export default function QueensContent() {
   const [n, setN] = useState(7);
-  const [colors, setColors] = useState(Array(n*n).fill(1));
+  const [colors, setColors] = useState(Array(n * n).fill(1));
   const [pickColor, setPickColor] = useState(1);
   const [editing, setEditing] = useState(true);
 
@@ -33,27 +33,27 @@ export default function QueensContent() {
   function decreaseSize() {
     if (n <= 5) return;
     const newC = [];
-    for (let i = 0; i < n-1; i++) {
-      for (let j = 0; j < n-1; j++) {
-        newC.push(Math.min(colors[i*n+j], n-1));
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - 1; j++) {
+        newC.push(Math.min(colors[i * n + j], n - 1));
       }
     }
-    setN(n-1);
+    setN(n - 1);
     setColors(newC);
     if (pickColor >= n) {
-      setPickColor(n-1);
+      setPickColor(n - 1);
     }
   }
 
   function increaseSize() {
     if (n >= 11) return;
-    const newC = Array((n+1)**2).fill(1);
+    const newC = Array((n + 1) ** 2).fill(1);
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        newC[i*(n+1)+j] = colors[i*n+j];
+        newC[i * (n + 1) + j] = colors[i * n + j];
       }
     }
-    setN(n+1);
+    setN(n + 1);
     setColors(newC);
   }
 
@@ -64,7 +64,7 @@ export default function QueensContent() {
         <QueensBoard
           n={n}
           colors={colors}
-          onDraw={drawColor}/>
+          onDraw={drawColor} />
         <div className="flex gap-6">
           Size:
           <button className="rounded-md bg-gray-200 active:bg-gray-300 p-1" onClick={decreaseSize}>➖</button>
