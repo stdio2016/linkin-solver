@@ -1,3 +1,6 @@
+import { allPairReachable, bipartiteMatching } from "@/utils/graph";
+import { ColorNames } from "./colorNames";
+
 export enum Answer {
   EMPTY = 0,
   X = 1, // mark impossible places
@@ -346,6 +349,12 @@ export class QueensSolver {
     const step5 = this.trySolveExcludeNeighbors();
     if (step5 !== null) return step5;
 
+    const step6 = this.trySolveNColors(false);
+    if (step6 !== null) return step6;
+
+    const step7 = this.trySolveNColors(true);
+    if (step7 !== null) return step7;
+
     return false;
   }
 
@@ -428,6 +437,72 @@ export class QueensSolver {
         return true;
       }
     }
+    return null;
+  }
+
+  private trySolveNColors(isColumn: boolean): boolean | null {
+    const colorRowMap: number[][] = [];
+    let queens = 0;
+    for (let i = 0; i < this.n; i++) {
+      colorRowMap.push([]);
+    }
+    for (let r = 0; r < this.n; r++) {
+      for (let c = 0; c < this.n; c++) {
+        let i = r * this.n + c;
+        if (isColumn) i = c * this.n + r;
+        const color = this.colors[i];
+        if (this.currentAnswer[i] === Answer.QUEEN) {
+          queens += 1;
+        }
+        if (color >= 1 && color <= this.n && this.currentAnswer[i] === Answer.EMPTY) {
+          const bucket = colorRowMap[color - 1];
+          // note: out of bound index in javascript will return undefined, which is not equal to r
+          // in other languages, need to check length first
+          if (bucket[bucket.length - 1] !== r) {
+            bucket.push(r);
+          }
+        }
+      }
+    }
+
+    const match = bipartiteMatching(colorRowMap);
+    if (match.matchCount < this.n - queens) {
+      this.noSolution = true;
+      // TODO: add more explanation
+      this.pushLastStep("No solution 🚫", []);
+      return false;
+    }
+    const reachable = allPairReachable(colorRowMap, match.matchFrom);
+    reachable.sort((a, b) => a.length - b.length);
+    for (let cover of reachable) {
+      if (cover.length < 2 || cover.length >= this.n - queens) {
+        continue;
+      }
+      const rows = cover.map(x => match.matchTo[x]);
+      rows.sort((a, b) => a - b);
+      const cellsToX = [];
+      for (let r of rows) {
+        for (let c = 0; c < this.n; c++) {
+          let idx = r * this.n + c;
+          if (isColumn) idx = c * this.n + r;
+          if (this.currentAnswer[idx] === Answer.EMPTY && !cover.includes(this.colors[idx] - 1)) {
+            cellsToX.push(idx);
+          }
+        }
+      }
+      const rsOrCs = isColumn ? 'columns' : 'rows';
+      if (cellsToX.length > 0) {
+        cellsToX.forEach(idx => this.currentAnswer[idx] = Answer.X);
+        this.steps.push({
+          answer: [...this.currentAnswer],
+          highlight: cellsToX,
+          description: `Colors {c0} only exist in ${rsOrCs} {1}, so other cells in these ${rsOrCs} cannot have a queen`,
+          params: [cover.map(x => x + 1), rows.map(x => x + 1)]
+        });
+        return true;
+      }
+    }
+
     return null;
   }
 }
