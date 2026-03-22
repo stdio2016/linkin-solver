@@ -70,7 +70,7 @@ export function allPairReachable(graph: number[][], matchFrom: number[]): number
     while (qp < queue.length) {
       const x = queue[qp];
       qp += 1;
-      for (let y of graph[x]) {
+      for (const y of graph[x]) {
         const x2 = matchFrom[y];
         if (x2 >= 0 && !visited[x2]) {
           visited[x2] = true;

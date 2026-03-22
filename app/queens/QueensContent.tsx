@@ -109,7 +109,7 @@ export default function QueensContent() {
           className="flex flex-col gap-2 top-[20%] absolute bg-white dark:bg-black p-6 rounded-md"
         >
           <div>Level code:</div>
-          <textarea value={encodeLevel(colors)} rows={4} readOnly className="w-full border-1 border-gray-300 font-mono" />
+          <textarea value={encodeLevel(colors)} rows={4} cols={22} readOnly className="w-full border-1 border-gray-300 font-mono" />
           <button
             className="rounded-md bg-gray-200 active:bg-gray-300 p-1"
             type="button"

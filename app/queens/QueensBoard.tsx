@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Answer } from "./QueensSolver";
 
 interface QueensBoardProps {
@@ -36,11 +35,17 @@ export default function QueensBoard({ n, colors, onDraw, answer, highlight }: Qu
       borderRight = highlightBorder;
       borderTop = highlightBorder;
     }
-    let backgroundImage = '';
+    let backgroundImage = null;
     if (answer?.[i] === Answer.QUEEN) {
-      backgroundImage = '/queen.svg';
+      backgroundImage = (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 50 50">
+          <path fill="#000" d="M0 17 17 30 25 5 33 30 50 17 40 45 10 45z" />
+        </svg>);
     } else if (answer?.[i] === Answer.X) {
-      backgroundImage = '/x.svg';
+      backgroundImage = (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 50 50">
+          <path fill="#000" d="M17 17 33 33 M33 17 17 33" stroke="black" strokeWidth="2" />
+        </svg>);
     }
     out.push(<div
       key={'cell' + i}
@@ -56,12 +61,7 @@ export default function QueensBoard({ n, colors, onDraw, answer, highlight }: Qu
       {backgroundImage && <div
         style={{ transform: 'scale(0.5)' }}
         className="absolute w-full h-full select-none">
-        <Image
-          src={backgroundImage}
-          alt=""
-          fill
-          className="object-contain"
-        />
+        {backgroundImage}
       </div>}
       <div style={{ borderLeft, borderRight, borderTop, borderBottom }}
         onPointerDown={e => e.currentTarget.releasePointerCapture(e.pointerId)}

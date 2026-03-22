@@ -1,5 +1,4 @@
 import { allPairReachable, bipartiteMatching } from "@/utils/graph";
-import { ColorNames } from "./colorNames";
 
 export enum Answer {
   EMPTY = 0,
@@ -474,14 +473,14 @@ export class QueensSolver {
     }
     const reachable = allPairReachable(colorRowMap, match.matchFrom);
     reachable.sort((a, b) => a.length - b.length);
-    for (let cover of reachable) {
+    for (const cover of reachable) {
       if (cover.length < 2 || cover.length >= this.n - queens) {
         continue;
       }
       const rows = cover.map(x => match.matchTo[x]);
       rows.sort((a, b) => a - b);
       const cellsToX = [];
-      for (let r of rows) {
+      for (const r of rows) {
         for (let c = 0; c < this.n; c++) {
           let idx = r * this.n + c;
           if (isColumn) idx = c * this.n + r;

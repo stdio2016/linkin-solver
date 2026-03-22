@@ -1,6 +1,6 @@
 export function encodeLevel(colors: number[]): string {
   let code = 'a=';
-  for (var i = 0; i < colors.length; i++) {
+  for (let i = 0; i < colors.length; i++) {
     code += colors[i].toString(36);
   }
   return code;
@@ -19,7 +19,7 @@ export function decodeLevel(code: string): number[] | null {
   if (n !== Math.floor(n)) {
     return null;
   }
-  for (var i = 0; i < code.length; i++) {
+  for (let i = 0; i < code.length; i++) {
     const c = code[i];
     let v = 0;
     if (c >= '0' && c <= '9') {
