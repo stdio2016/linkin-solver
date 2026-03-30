@@ -18,7 +18,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="w-full">
-            <Link href="" className="flex border-1 rounded-md justify-between">
+            <Link href="/tango" className="flex border-1 rounded-md justify-between">
               <div className="p-3 flex items-center">Tango (Coming Soon)</div>
               <div className="p-3 bg-gray-300 flex items-center rounded-r-md">
                 <Image src="tango.svg" alt="" width={50} height={50} />
