@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Modal from "react-modal";
-import TangoBoard from "./TangoBoard";
+import TangoBoard, { Moon, Sun } from "./TangoBoard";
+import { initBoard, TangoConfig } from "./TangoSolver";
 
 export default function TangoContent() {
+  const [board, setBoard] = useState<TangoConfig>(initBoard());
   const [editing, setEditing] = useState(true);
   const [showCode, setShowCode] = useState(false);
   const [showLoadCode, setShowLoadCode] = useState(false);
@@ -15,10 +17,10 @@ export default function TangoContent() {
     return (
       <main className="flex min-h-svh w-full max-w-[430px] flex-col items-center pt-12 px-8 bg-white gap-2 dark:bg-black">
         <p className="text-xl">Edit board</p>
-        <TangoBoard />
+        <TangoBoard board={board} setBoard={setBoard} />
         <div>
-          <div>Click a cell to toggle sun / moon / empty.</div>
-          <div>Click an edge to toggle equal / cross / no symbol.</div>
+          <div>Click a cell to toggle <Sun className="size-4 inline" /> / <Moon className="size-4 inline" /> / empty.</div>
+          <div>Click an edge to toggle = / × / no symbol.</div>
         </div>
         <button
           className="rounded-md text-white bg-blue-500 active:bg-blue-600 pt-1 pb-1 pl-3 pr-3"
