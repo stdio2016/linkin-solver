@@ -12,6 +12,7 @@ export default function QueensContent() {
   const [pickColor, setPickColor] = useState(2);
   const [editing, setEditing] = useState(true);
   const [showCode, setShowCode] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [showLoadCode, setShowLoadCode] = useState(false);
   const [inputCode, setInputCode] = useState('');
 
@@ -104,16 +105,25 @@ export default function QueensContent() {
         </div>
         <Modal
           isOpen={showCode}
-          onRequestClose={() => setShowCode(false)}
+          onRequestClose={() => { setShowCode(false); setCopied(false); }}
           overlayClassName="fixed inset-0 bg-black/50 flex flex-row justify-center"
           className="flex flex-col gap-2 top-[20%] absolute bg-white dark:bg-black p-6 rounded-md"
         >
           <div>Level code:</div>
           <textarea value={encodeLevel(colors)} rows={4} cols={22} readOnly className="w-full border-1 border-gray-300 font-mono" />
           <button
+            className="rounded-md bg-green-500 text-white active:bg-green-600 p-1"
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(encodeLevel(colors));
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+          >{copied ? 'Copied!' : 'Copy to clipboard'}</button>
+          <button
             className="rounded-md bg-gray-200 active:bg-gray-300 p-1"
             type="button"
-            onClick={() => setShowCode(false)}
+            onClick={() => { setShowCode(false); setCopied(false); }}
           >Close</button>
         </Modal>
         <Modal
