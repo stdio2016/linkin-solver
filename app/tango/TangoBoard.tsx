@@ -28,6 +28,8 @@ function Cross() {
 
 interface TangoBoardProps {
   board: TangoConfig;
+  answer?: SunMoon[]; // TODO
+  highlight?: number[]; // TODO
   setBoard: (board: TangoConfig) => void;
 }
 

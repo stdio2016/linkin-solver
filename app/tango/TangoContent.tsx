@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import TangoBoard, { Moon, Sun } from "./TangoBoard";
 import { initBoard, TangoConfig } from "./TangoSolver";
 import { decodeLevel, encodeLevel } from "./levelCode";
+import { TangoSolutionView } from "./TangoSolutionView";
 
 export default function TangoContent() {
   const [board, setBoard] = useState<TangoConfig>(initBoard());
@@ -99,12 +100,9 @@ export default function TangoContent() {
     );
   }
   return (
-    <div>TODO: TangoSolutionView
-      <button
-        className="rounded-md text-white bg-blue-500 active:bg-blue-600 pt-1 pb-1 pl-3 pr-3"
-        type="button"
-        onClick={() => setEditing(true)}
-      >Edit</button>
-    </div>
+    <TangoSolutionView
+      board={board}
+      onEdit={() => setEditing(true)}
+    />
   );
 };
