@@ -369,6 +369,7 @@ export class QueensSolver {
    */
   private trySolveExcludeShortLineNeighbors(): boolean | null {
     for (const isColumn of [false, true]) {
+      const rowOrColumn = isColumn ? "column" : "row";
       for (let line = 0; line < this.n; line++) {
         const emptyCells: number[] = [];
         let hasQueen = false;
@@ -379,56 +380,43 @@ export class QueensSolver {
           if (this.currentAnswer[idx] === Answer.EMPTY) emptyCells.push(idx);
         }
 
-        // The line must have exactly one contiguous run of two or three cells.
+        // The line must have exactly one contiguous run of two or three cells, or 3 cells like _x_
         if (hasQueen || emptyCells.length < 2 || emptyCells.length > 3) continue;
         const offsets = emptyCells.map(idx => isColumn ? Math.floor(idx / this.n) : idx % this.n);
-        if (!offsets.every((offset, i) => i === 0 || offset === offsets[i - 1] + 1)) continue;
+        const minPos = Math.min(...offsets);
+        const maxPos = Math.max(...offsets);
+        if (maxPos - minPos > 2) continue;
 
-        for (const candidate of emptyCells) {
-          const row = Math.floor(candidate / this.n);
-          const col = candidate % this.n;
+        const candidate = emptyCells[0];
+        const row = Math.floor(candidate / this.n);
+        const col = candidate % this.n;
+        const canX = [];
+        for (let i = (maxPos - minPos) - 1; i < 2; i++) {
+          for (let candidateLine of [line - 1, line + 1]) {
+            if (line < 0 || line >= this.n) continue;
+            const idx = isColumn ? (row+i) * this.n + candidateLine : candidateLine * this.n + (col+i);
 
-          if (this.queenWouldBlockAdjacentLine(row, col, false) ||
-              this.queenWouldBlockAdjacentLine(row, col, true)) {
-            this.currentAnswer[candidate] = Answer.X;
-            this.steps.push({
-              answer: [...this.currentAnswer],
-              highlight: [candidate],
-              description: "Placing a queen in the highlighted cell would leave a neighboring row or column with no possible cell, so it is marked as X",
-              params: []
-            });
-            return true;
+            if (this.currentAnswer[idx] === Answer.EMPTY) {
+              canX.push(idx);
+            }
           }
+        }
+
+        if (canX.length > 0) {
+          for (let idx of canX) {
+            this.currentAnswer[idx] = Answer.X;
+          }
+          this.steps.push({
+            answer: [...this.currentAnswer],
+            highlight: canX,
+            description: `Placing a queen in the highlighted cell would leave ${rowOrColumn} {0} with no possible cell, so it is marked as X`,
+            params: [isColumn ? col + 1 : row + 1]
+          });
+          return true;
         }
       }
     }
     return null;
-  }
-
-  /** Returns whether the queen would exhaust an adjacent, unsolved line. */
-  private queenWouldBlockAdjacentLine(row: number, col: number, isColumn: boolean): boolean {
-    const candidateLine = isColumn ? col : row;
-    for (const line of [candidateLine - 1, candidateLine + 1]) {
-      if (line < 0 || line >= this.n) continue;
-
-      const emptyCells: number[] = [];
-      let hasQueen = false;
-      for (let offset = 0; offset < this.n; offset++) {
-        const idx = isColumn ? offset * this.n + line : line * this.n + offset;
-        if (this.currentAnswer[idx] === Answer.QUEEN) hasQueen = true;
-        if (this.currentAnswer[idx] === Answer.EMPTY) emptyCells.push(idx);
-      }
-
-      // A queen attacks cells in an adjacent line only in its three-cell-wide neighborhood.
-      if (!hasQueen && emptyCells.length > 0 && emptyCells.every(idx => {
-        const targetRow = Math.floor(idx / this.n);
-        const targetCol = idx % this.n;
-        return Math.abs(targetRow - row) <= 1 && Math.abs(targetCol - col) <= 1;
-      })) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private trySolveExcludeNeighbors(): boolean | null {
