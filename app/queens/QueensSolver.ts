@@ -354,6 +354,80 @@ export class QueensSolver {
     const step7 = this.trySolveNColors(true);
     if (step7 !== null) return step7;
 
+    // Keep this as the final deduction strategy: it is a more local,
+    // exploratory check than the general color and matching deductions above.
+    const step8 = this.trySolveExcludeShortLineNeighbors();
+    if (step8 !== null) return step8;
+
+    return false;
+  }
+
+  /**
+   * A short contiguous run of candidates can reveal that one of its cells is
+   * impossible: putting a queen there may eliminate every candidate in an
+   * adjacent row or column.
+   */
+  private trySolveExcludeShortLineNeighbors(): boolean | null {
+    for (const isColumn of [false, true]) {
+      for (let line = 0; line < this.n; line++) {
+        const emptyCells: number[] = [];
+        let hasQueen = false;
+
+        for (let offset = 0; offset < this.n; offset++) {
+          const idx = isColumn ? offset * this.n + line : line * this.n + offset;
+          if (this.currentAnswer[idx] === Answer.QUEEN) hasQueen = true;
+          if (this.currentAnswer[idx] === Answer.EMPTY) emptyCells.push(idx);
+        }
+
+        // The line must have exactly one contiguous run of two or three cells.
+        if (hasQueen || emptyCells.length < 2 || emptyCells.length > 3) continue;
+        const offsets = emptyCells.map(idx => isColumn ? Math.floor(idx / this.n) : idx % this.n);
+        if (!offsets.every((offset, i) => i === 0 || offset === offsets[i - 1] + 1)) continue;
+
+        for (const candidate of emptyCells) {
+          const row = Math.floor(candidate / this.n);
+          const col = candidate % this.n;
+
+          if (this.queenWouldBlockAdjacentLine(row, col, false) ||
+              this.queenWouldBlockAdjacentLine(row, col, true)) {
+            this.currentAnswer[candidate] = Answer.X;
+            this.steps.push({
+              answer: [...this.currentAnswer],
+              highlight: [candidate],
+              description: "Placing a queen in the highlighted cell would leave a neighboring row or column with no possible cell, so it is marked as X",
+              params: []
+            });
+            return true;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /** Returns whether the queen would exhaust an adjacent, unsolved line. */
+  private queenWouldBlockAdjacentLine(row: number, col: number, isColumn: boolean): boolean {
+    const candidateLine = isColumn ? col : row;
+    for (const line of [candidateLine - 1, candidateLine + 1]) {
+      if (line < 0 || line >= this.n) continue;
+
+      const emptyCells: number[] = [];
+      let hasQueen = false;
+      for (let offset = 0; offset < this.n; offset++) {
+        const idx = isColumn ? offset * this.n + line : line * this.n + offset;
+        if (this.currentAnswer[idx] === Answer.QUEEN) hasQueen = true;
+        if (this.currentAnswer[idx] === Answer.EMPTY) emptyCells.push(idx);
+      }
+
+      // A queen attacks cells in an adjacent line only in its three-cell-wide neighborhood.
+      if (!hasQueen && emptyCells.length > 0 && emptyCells.every(idx => {
+        const targetRow = Math.floor(idx / this.n);
+        const targetCol = idx % this.n;
+        return Math.abs(targetRow - row) <= 1 && Math.abs(targetCol - col) <= 1;
+      })) {
+        return true;
+      }
+    }
     return false;
   }
 
