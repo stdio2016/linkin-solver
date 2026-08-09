@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# well, every computer is different so the following env file cannot commit
+# note these files would be empty
+HAS_NVM

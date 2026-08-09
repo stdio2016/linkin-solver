@@ -112,7 +112,7 @@ export default function QueensContent() {
           <div>Level code:</div>
           <textarea value={encodeLevel(colors)} rows={4} cols={22} readOnly className="w-full border-1 border-gray-300 font-mono" />
           <button
-            className="rounded-md bg-green-500 text-white active:bg-green-600 p-1"
+            className="rounded-md bg-blue-500 text-white active:bg-blue-600 p-1"
             type="button"
             onClick={() => {
               navigator.clipboard.writeText(encodeLevel(colors));
@@ -135,7 +135,7 @@ export default function QueensContent() {
           <div>Enter level code:</div>
           <textarea value={inputCode} onChange={(e) => setInputCode(e.target.value)} rows={4} className="w-full border-1 border-gray-300 font-mono" />
           <button
-            className="rounded-md bg-gray-200 active:bg-gray-300 p-1"
+            className="rounded-md bg-blue-500 text-white active:bg-blue-600 p-1"
             type="button"
             onClick={() => {
               const colors = decodeLevel(inputCode);
